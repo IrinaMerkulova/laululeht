@@ -49,7 +49,7 @@ if(isset($_REQUEST['kustuta'])) {
 </form>
 
 
-<table>
+<table class="zigzag">
     <tr>
         <th></th>
         <th>Laulunimi</th>
@@ -93,10 +93,11 @@ FROM laulud');
 </body>
 <?php
 $yhendus->close();
+//Ülesanne:
 // Admin lehel - laulu kustutamine
 // css table style
 // Admin lehel -punktid nulliks
-// Navigeerimismenüü / adminleht/ kasutajaleht
+// Üldine Navigeerimismenüü / adminleht/ kasutajaleht
 
 
 
