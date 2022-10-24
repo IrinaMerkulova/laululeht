@@ -13,7 +13,8 @@ id int primary key AUTO_INCREMENT,
 laulunimi varchar(50),
 lisamisaeg datetime,
 punktid int Default 0,
-kommentaarid text
+kommentaarid text Default ' ',
+avalik int DEFAULT 1)
 )
   */
 ?>

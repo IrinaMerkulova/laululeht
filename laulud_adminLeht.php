@@ -40,6 +40,12 @@ if(isset($_REQUEST['kustuta'])) {
     <link rel="stylesheet" type="text/css" href="style.css">
 </head>
 <body>
+<nav>
+     <a href="homepage.php">Koduleht</a>
+    <a href="laulud_adminLeht.php">Administreerimise leht</a>
+    <a href="laulud.php">Kasutaja leht</a>
+    <a href="link">Git HUB</a>
+  </nav>
 <h1>Laulude admin leht</h1>
 <h2>Laulu lisamine</h2>
 <form action="?" method="post">
@@ -93,14 +99,21 @@ FROM laulud');
 </body>
 <?php
 $yhendus->close();
-//Ülesanne:
+// Ülesanne:
 // Admin lehel - laulu kustutamine
 // css table style
 // Admin lehel -punktid nulliks
 // Üldine Navigeerimismenüü / adminleht/ kasutajaleht
+//<nav>
+//    <a href="homepage.php">Koduleht</a>
+//    <a href="laulud_adminLeht.php">Administreerimise leht</a>
+//    <a href="laulud.php">Kasutaja leht</a>
+//    <a href="link">Git HUB</a>
+//</nav>
+// Admin näeb kommentaarid ja saab neid kustutada
+// Kasutaja ei saa lisada tühjad kommentaarid
 
-
-
+// Homepage - Laulu lisamine --->alert(Laulu on lisatud) või kohe suunatakse Kasutaja lehele
 ?>
 </html>
 
