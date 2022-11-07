@@ -1,5 +1,12 @@
 <?php
 require_once ('conf.php');
+
+// sessiooni algus
+session_start();
+if(!isset($_SESSION['tuvastamine'])){
+    header('Location: loginAB.php');
+    exit();
+}
 global $yhendus;
 // tabeli andmete lisamine
 
@@ -40,6 +47,12 @@ if(isset($_REQUEST['kustuta'])) {
     <link rel="stylesheet" type="text/css" href="style.css">
 </head>
 <body>
+<div>
+    <p><?=$_SESSION["kasutaja"]?> on sisse logitud</p>
+    <form action="logout.php" method="post">
+        <input type="submit" value="Logi välja" name="logout">
+    </form>
+</div>
 <nav>
      <a href="homepage.php">Koduleht</a>
     <a href="laulud_adminLeht.php">Administreerimise leht</a>
