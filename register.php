@@ -9,17 +9,23 @@ if (isset($_SESSION['username']) && isset($_SESSION['userid']))
 if (isset($_POST['registerBtn'])){
     // get all of the form data
     $username = $_POST['username'];
-   $passwd = $_POST['passwd'];
+    $passwd = $_POST['passwd'];
     $passwd_again = $_POST['passwd_again'];
 
 
     // query the database to see if the username is taken
     global $yhendus;
-    $query = mysqli_query($yhendus, "SELECT * FROM kasutajad WHERE nimi='{$username}'");
-    if (mysqli_num_rows($query) == 0){
+    $kask= $yhendus->prepare("SELECT * FROM kasutajad WHERE nimi=?");
+    $kask->bind_param("s",$username);
+    $kask->execute();
+    //$query = mysqli_query($yhendus, "SELECT * FROM kasutajad WHERE nimi='$username'");
+    if (!$kask->fetch()){
+
         // create and format some variables for the database
         $id = '';
-        $passwd = md5($passwd);
+        $sool='vagavagatekst';
+        $krypt=crypt($passwd, $sool);
+        $passwd_hashed = $krypt;
         $date_created = time();
         $last_login = 0;
         $status = 1;
@@ -31,8 +37,19 @@ if (isset($_POST['registerBtn'])){
             // make sure the two passwords match
             if ($passwd === $passwd_again){
                 // make sure the password meets the min strength requirements
-                if ( strlen($passwd) >= 5 && strpbrk($passwd, "!#$.,:;()") != false ){
-                    // next code block
+                if ( strlen($passwd) >= 5 && strpbrk($passwd, "!#$.,:;()")){
+                    // insert the user into the database
+                    mysqli_query($yhendus, "INSERT INTO kasutajad (nimi, parool) VALUES ('$username', '$passwd_hashed')");
+                    //echo "<script>alert('rrrr')</script>";
+// verify the user's account was created
+                    $query = mysqli_query($yhendus, "SELECT * FROM kasutajad WHERE nimi='{$username}'");
+                    if (mysqli_num_rows($query) == 1){
+
+                        /* IF WE ARE HERE THEN THE ACCOUNT WAS CREATED! YAY! */
+                        /* WE WILL SEND EMAIL ACTIVATION CODE HERE LATER */
+//echo "<script>alert('yay')</script>";
+                        $success = true;
+                    }
                 }
                 else
                     $error_msg = 'Your password is not strong enough. Please use another.';
@@ -46,18 +63,7 @@ if (isset($_POST['registerBtn'])){
     else
         $error_msg = 'The username <i>'.$username.'</i> is already taken. Please use another.';
 }
-// insert the user into the database
-mysqli_query($yhendus, "INSERT INTO kasutajad (nimi, parool) VALUES ({'$username}', '{$passwd}')");
 
-// verify the user's account was created
-$query = mysqli_query($yhendus, "SELECT * FROM kasutajad WHERE nimi='{$username}'");
-if (mysqli_num_rows($query) == 1){
-
-    /* IF WE ARE HERE THEN THE ACCOUNT WAS CREATED! YAY! */
-    /* WE WILL SEND EMAIL ACTIVATION CODE HERE LATER */
-
-    $success = true;
-}
 else
     $error_msg = 'An error occurred and your account was not created.';
 
@@ -74,8 +80,8 @@ else
     <div class="">
         <?php
         // check to see if the user successfully created an account
-        if (isset($success) && $success == true){
-            echo '<p color="green">Yay!! Your account has been created. <a href="./login.php">Click here</a> to login!<p>';
+        if (isset($success) && $success){
+            echo '<p color="green">Yay!! Your account has been created. <a href="./loginAB.php">Click here</a> to login!<p>';
         }
         // check to see if the error message is set, if so display it
         else if (isset($error_msg))
@@ -94,7 +100,7 @@ else
         <p>password must be at least 5 characters and<br /> have a special character, e.g. !#$.,:;()</font></p>
     </div>
     <div class="">
-        <input type="password" name="confirm_password" value="" placeholder="confirm your password" autocomplete="off" required />
+        <input type="password" name="passwd_again" value="" placeholder="confirm your password" autocomplete="off" required />
     </div>
 
     <div class="">
@@ -102,6 +108,6 @@ else
     </div>
 
     <p class="center"><br />
-        Already have an account? <a href="login.php">Login here</a>
+        Already have an account? <a href="loginAB.php">Login here</a>
     </p>
 </form>
